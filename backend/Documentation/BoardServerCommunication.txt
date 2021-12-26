@@ -1,0 +1,13 @@
+Board                                                   Server
+========================================================================================================================
+                                                        waiting for board to connect to socket at given port number
+connect websocket at given port number
+send { "begin": True }
+                                                        send boardState
+WHILE LOOP -------------------------------------------------------------------------------------------------------------
+                                                        send dice roll value (triggered by client's roll request)
+                                                        send boardState
+                                                        *send Chance/ComChest card
+                                                        *send new boardState (Chance/ComChest/Bought Property/Houses)
+------------------------------------------------------------------------------------------------------------------------
+                                                        send game over! (triggered by client's bankruptcy request)

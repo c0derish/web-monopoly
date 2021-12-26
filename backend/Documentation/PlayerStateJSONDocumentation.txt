@@ -1,0 +1,24 @@
+{
+    yourTurn: True/False,
+    bank: <player's money>,
+    properties: [
+        {
+            name: <property name>,
+            houses: <number of houses>,
+            morgaged: True/False
+        }
+    ]
+
+    // UI will display a Scroll View of the following buttons in order: actions buttons, pay debt (if non-zero), end turn
+    actions: [
+        'Buy This Property',
+        ...
+    ] // 'Buy This Property', 'Pay £50 To Get Out Of Jail', 'Get Out Of Jail Free'
+    debt: 150 // from Chance/ComChest
+
+    otherPlayers: [
+        <player descriptor 1>,
+        <player descriptor 2>,
+        ...
+    ]
+}

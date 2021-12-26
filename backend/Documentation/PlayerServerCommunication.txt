@@ -1,0 +1,104 @@
+Player                                                  Server
+========================================================================================================================
+GET("/connect_to_game/<gameCode>")
+               |
+               |_______________________________________ Response:
+                                                        { playerID: <playerID>, descriptor: <player colour> }
+                                                                       |
+Instant trigger new request:  _________________________________________|
+Get("/game/<gameCode>/<playerID>") _____________________________________
+               |              PlayerState Cycle                        |^
+               |_______________________________________ Response:
+                                                        PlayerState (whenever player state changes)
+                                                        (Initially send everyone a 'yourturn: false'
+                                                        (Upon start game,
+                                                            send concerned player a 'yourturn: true'
+                                                            send everyone new playerState with correct 'other players')
+
+SEND MONEY: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+POST("/game/<gameCode>/<playerID>/send_money")
+    {
+      amount: <amount>,
+      recipient: <recipient descriptor>
+    }
+               |
+               |_______________________________________ Response:
+                                                        (Update game states and respond on player state)
+                                                        { done: True }
+                                                        (The PlayerState Cycle will update everything)
+
+PROPERTY STUFF: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ GIVE PROPERTY: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+POST("/game/<gameCode>/<playerID>/give_property")
+    {
+      property: <property name>,
+      recipient: <recipient descriptor>
+    }
+               |
+               |_______________________________________ Response:
+                                                        (Update game states and respond on player state)
+                                                        { done: True }
+                                                        (The PlayerState Cycle will update everything)
+
+ BUILD HOUSE ON PROPERTY: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+POST("/game/<gameCode>/<playerID>/build")
+    {
+      property: <property name>
+    }
+               |
+               |_______________________________________ Response:
+                                                        (Update game states and respond on player state)
+                                                        { done: True }
+                                                        (The PlayerState Cycle will update everything)
+
+ DEMOLISH HOUSE ON PROPERTY: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+POST("/game/<gameCode>/<playerID>/demolish")
+    {
+      property: <property name>
+    }
+               |
+               |_______________________________________ Response:
+                                                        (Update game states and respond on player state)
+                                                        { done: True }
+                                                        (The PlayerState Cycle will update everything)
+
+ MORGAGE PROPERTY: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+POST("/game/<gameCode>/<playerID>/morgage")
+    {
+      property: <property name>
+    }
+               |
+               |_______________________________________ Response:
+                                                        (Update game states and respond on player state)
+                                                        { done: True }
+                                                        (The PlayerState Cycle will update everything)
+
+ UNMORGAGE PROPERTY: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+POST("/game/<gameCode>/<playerID>/unmorgage")
+     {
+       property: <property name>
+     }
+                |
+                |_______________________________________ Response:
+                                                         (Update game states and respond on player state)
+                                                         { done: True }
+                                                         (The PlayerState Cycle will update everything)
+
+ACTION BUTTON: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+POST("/game/<gameCode>/<playerID>/action")
+     {
+       action: <action string name>
+     }
+                |
+                |_______________________________________ Response:
+                                                         (Update game states and respond on player state)
+                                                         { done: True }
+                                                         (The PlayerState Cycle will update everything)

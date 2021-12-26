@@ -1,0 +1,17 @@
+{
+    dice: <dice roll if just rolled>
+    cells: [
+        {
+            occupants: [ 'red', 'blue' ]
+            houses: 4
+        },
+
+        {
+            occupants: [ 'green' ]
+            houses: 1
+        },
+
+        ...
+        // till cell 39 (mayfair)
+    ]
+}
