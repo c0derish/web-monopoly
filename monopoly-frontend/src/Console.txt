@@ -1,0 +1,2 @@
+[Log] mounted (bundle.js, line 144)
+[Log] handling resize (bundle.js, line 132)
