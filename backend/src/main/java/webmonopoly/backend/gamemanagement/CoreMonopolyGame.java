@@ -9,6 +9,8 @@ public class CoreMonopolyGame {
     int currentPlayer;
     int currentPlayerDebt;
     boolean diceRolled;
+    Decks.Card currentCard = null;
+    String currentCardType = null;
     Player[] players;
     Property[] properties;
     LinkedList<Decks.Chance> chanceCards;
@@ -39,17 +41,61 @@ public class CoreMonopolyGame {
         diceRolled = false;
     }
 
-    public int rollDice() {
-        int roll = dice.nextInt(6) + 1;
+    public Roll rollDice() {
+        Roll roll = new Roll(dice.nextInt(6) + 1, dice.nextInt(6) + 1);
         diceRolled = true;
-        players[currentPlayer].location = (players[currentPlayer].location + roll) % 40;
+        if (players[currentPlayer].inJail > 0) {
+            if (roll.doubles) {
+                players[currentPlayer].inJail = 0;
+            } else {
+                players[currentPlayer].inJail -= 1;
+            }
+            return roll;
+        }
+        int oldLoc = players[currentPlayer].location;
+        players[currentPlayer].location = (players[currentPlayer].location + roll.n) % 40;
+        if (players[currentPlayer].location < oldLoc) {
+            players[currentPlayer].bank += 200; // Passed go
+        }
+        if (players[currentPlayer].location == 30) {
+            players[currentPlayer].location = 10;
+            players[currentPlayer].inJail = 3;
+        } else if (players[currentPlayer].location == 4) {
+            currentPlayerDebt += 200; // income tax
+        } else if (players[currentPlayer].location == 38) {
+            currentPlayerDebt += 100; // super tax
+        } else if (propertyNames[players[currentPlayer].location] == "chance") {
+            currentCard = drawChance();
+            currentCardType = "chance";
+        } else if (propertyNames[players[currentPlayer].location] == "community_chest") {
+            currentCard = drawComChest();
+            currentCardType = "community_chest";
+        }
         return roll;
     }
 
-    private Object drawCard(LinkedList<Object> cards) {
-        Object card = cards.pop();
-        cards.add(card);
-        return card;
+    public void handleEventCard() {
+        if (currentCard != null) {
+            currentCard.transform(this);
+            currentCard = null;
+            currentCardType = null;
+        }
+    }
+
+    private Decks.Card drawChance() {
+        Decks.Chance cardSpec = chanceCards.pop();
+        chanceCards.add(cardSpec);
+        return Decks.chanceCards.get(cardSpec);
+    }
+
+    private Decks.Card drawComChest() {
+        Decks.ComChest cardSpec = comChestCards.pop();
+        comChestCards.add(cardSpec);
+        return Decks.comChestCards.get(cardSpec);
+    }
+
+    public void declareBankrupt(Integer player) {
+        // TODO: Implement
     }
 
     public static String[] playerDescriptors = { "blue", "green", "red", "goldenrod", "purple", "cyan" };
@@ -70,6 +116,7 @@ public class CoreMonopolyGame {
     };
 
     public static Map<Actions, String> actionStrings = Map.ofEntries(
+            Map.entry(Actions.ROLL_DICE, "Roll Dice"),
             Map.entry(Actions.BUY_THIS_PROPERTY, "Buy This Property"),
             Map.entry(Actions.PAY_OUT_OF_JAIL, "Pay £50 To Get Out Of Jail"),
             Map.entry(Actions.GET_OUT_OF_JAIL_FREE, "Get Out Of Jail Free"),
@@ -79,6 +126,7 @@ public class CoreMonopolyGame {
     );
 
     public enum Actions {
+        ROLL_DICE,
         BUY_THIS_PROPERTY,
         PAY_OUT_OF_JAIL,
         GET_OUT_OF_JAIL_FREE,
@@ -90,19 +138,19 @@ public class CoreMonopolyGame {
     static class Player {
         Integer location;
         Integer bank;
-        boolean inJail;
+        Integer inJail;
         boolean getOutOfJailFree;
         String descriptor; // The string repr of the colour 'red', or the piece if pieces are being used e.g 'car'
 
         public Player(String descriptor) {
             location = 0;
             bank = 1500;
-            inJail = false;
+            inJail = 0;
             getOutOfJailFree = false;
             this.descriptor = descriptor;
         }
 
-        public Player(int location, int bank, boolean inJail, boolean getOutOfJailFree, String descriptor) {
+        public Player(int location, int bank, Integer inJail, boolean getOutOfJailFree, String descriptor) {
             this.location = location;
             this.bank = bank;
             this.inJail = inJail;
@@ -115,16 +163,27 @@ public class CoreMonopolyGame {
         String name;
         Integer basePrice;
         Integer ownerID = null;
-        boolean morgaged = false;
+        boolean mortgaged = false;
         int numHouses = 0;
 
         public Property(String name, Integer basePrice) { this.name = name; this.basePrice = basePrice; }
 
-        public Property(String name, int owner, boolean morgage, int n_houses) {
+        public Property(String name, int owner, boolean mortgage, int n_houses) {
             this.name = name;
             ownerID = owner;
-            morgaged = morgage;
+            mortgaged = mortgage;
             numHouses = n_houses;
+        }
+    }
+
+    static class Roll {
+
+        public int n;
+        public boolean doubles;
+
+        public Roll(int r1, int r2) {
+            n = r1 + r2;
+            doubles = r1 == r2;
         }
     }
 

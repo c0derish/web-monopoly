@@ -1,6 +1,5 @@
 package webmonopoly.backend.gamemanagement;
 
-import javax.print.Doc;
 import java.util.*;
 
 public class Decks {
@@ -94,7 +93,7 @@ public class Decks {
 
     abstract static class Card {
         String message;
-        public abstract void transform(MonopolyGame mg);
+        public abstract void transform(CoreMonopolyGame mg);
     }
 
     static class PrefShares extends Card {
@@ -102,7 +101,7 @@ public class Decks {
         PrefShares() { this.message = "Receive interest on 7% preference shares: £25"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.players[mg.currentPlayer].bank += 25; }
+        public void transform(CoreMonopolyGame mg) { mg.players[mg.currentPlayer].bank += 25; }
     }
 
     static class BackToOldKent extends Card {
@@ -110,7 +109,7 @@ public class Decks {
         BackToOldKent() { this.message = "Go back to Old Kent Road. Do not pass Go, do not collect £200"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].location = 1;
         }
     }
@@ -120,7 +119,7 @@ public class Decks {
         Inherit() { this.message = "You inherit £100"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.players[mg.currentPlayer].bank += 100; }
+        public void transform(CoreMonopolyGame mg) { mg.players[mg.currentPlayer].bank += 100; }
     }
 
     static class BeautyContest extends Card {
@@ -128,7 +127,7 @@ public class Decks {
         BeautyContest() { this.message = "You have won second prize in a beauty contest. Collect £10"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.players[mg.currentPlayer].bank += 10; }
+        public void transform(CoreMonopolyGame mg) { mg.players[mg.currentPlayer].bank += 10; }
     }
 
     static class StreetRepairs extends Card {
@@ -136,9 +135,9 @@ public class Decks {
         StreetRepairs() { this.message = "You are assessed for street repairs. £40 per house. £115 per hotel"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             int amount = 0;
-            for (MonopolyGame.Property p : mg.properties) {
+            for (CoreMonopolyGame.Property p : mg.properties) {
                 if (p.ownerID == mg.currentPlayer) {
                     amount += (p.numHouses == 5) ? 115 : p.numHouses * 40;
                 }
@@ -152,7 +151,7 @@ public class Decks {
         SchoolFees() { this.message = "Pay school fees of £50"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.currentPlayerDebt += 50; }
+        public void transform(CoreMonopolyGame mg) { mg.currentPlayerDebt += 50; }
     }
 
     static class HospitalFees extends Card {
@@ -160,7 +159,7 @@ public class Decks {
         HospitalFees() { this.message = "Pay hospital fees of £100"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.currentPlayerDebt += 100; }
+        public void transform(CoreMonopolyGame mg) { mg.currentPlayerDebt += 100; }
     }
 
     static class LifeInsurance extends Card {
@@ -168,7 +167,7 @@ public class Decks {
         LifeInsurance() { this.message = "Life insurance matures. Collect £100"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.players[mg.currentPlayer].bank += 100; }
+        public void transform(CoreMonopolyGame mg) { mg.players[mg.currentPlayer].bank += 100; }
     }
 
     static class Birthday extends Card {
@@ -176,7 +175,7 @@ public class Decks {
         Birthday() { this.message = "It is your birthday. Collect £10 from every player"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             int sum = 0;
             for (int i = 0; i < mg.players.length; i++) {
                 if (i == mg.currentPlayer || mg.players[i].bank < 10) {
@@ -194,7 +193,7 @@ public class Decks {
         IncomeTaxRefund() { this.message = "Income tax refund. Collect £20"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.players[mg.currentPlayer].bank += 20; }
+        public void transform(CoreMonopolyGame mg) { mg.players[mg.currentPlayer].bank += 20; }
     }
 
     static class HolidayFund extends Card {
@@ -202,7 +201,7 @@ public class Decks {
         HolidayFund() { this.message = "Holiday fund matures. Receive £100"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.players[mg.currentPlayer].bank += 100; }
+        public void transform(CoreMonopolyGame mg) { mg.players[mg.currentPlayer].bank += 100; }
     }
 
     static class SaleOfStock extends Card {
@@ -210,7 +209,7 @@ public class Decks {
         SaleOfStock() { this.message = "From sale of stock you get £50."; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.players[mg.currentPlayer].bank += 50; }
+        public void transform(CoreMonopolyGame mg) { mg.players[mg.currentPlayer].bank += 50; }
     }
 
     static class DoctorsFee extends Card {
@@ -218,7 +217,7 @@ public class Decks {
         DoctorsFee() { this.message = "Doctor's fee. Pay £50"; }
 
         @Override
-        public void transform(MonopolyGame mg) { mg.currentPlayerDebt += 50; }
+        public void transform(CoreMonopolyGame mg) { mg.currentPlayerDebt += 50; }
     }
 
     static class CrosswordComp extends Card {
@@ -226,7 +225,7 @@ public class Decks {
         CrosswordComp() { this.message = "You have won a crossword competition. Collect £100"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].bank += 100;
         }
     }
@@ -236,7 +235,7 @@ public class Decks {
         DrunkInCharge() { this.message = "\"Drunk in charge\" fine £20"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.currentPlayerDebt += 20;
         }
     }
@@ -246,7 +245,7 @@ public class Decks {
         BuildingLoan() { this.message = "Your building loan matures. Collect £150"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].bank += 150;
         }
     }
@@ -256,7 +255,7 @@ public class Decks {
         TripToKingsX() { this.message = "Take a trip to Kings Cross Station. If you pass Go, collect £200"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             Card advanceToKX = new AdvanceTo(5, "King's Cross Station", true);
             advanceToKX.transform(mg);
         }
@@ -267,7 +266,7 @@ public class Decks {
         SpeedingFine() { this.message = "Speeding fine £15"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.currentPlayerDebt += 15;
         }
     }
@@ -277,9 +276,9 @@ public class Decks {
         GeneralRepairs() { this.message = "Make general repairs on all your property. For each house pay £25. For each hotel pay £100"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             int amount = 0;
-            for (MonopolyGame.Property p : mg.properties) {
+            for (CoreMonopolyGame.Property p : mg.properties) {
                 if (p.ownerID == mg.currentPlayer) {
                     amount += Math.min(p.numHouses * 25, 100);
                 }
@@ -293,9 +292,9 @@ public class Decks {
         GoJail() { this.message = "Go to Jail. Go directly to Jail, do not pass Go, do not collect £200"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].location = 10;
-            mg.players[mg.currentPlayer].inJail = true;
+            mg.players[mg.currentPlayer].inJail = 3;
         }
     }
 
@@ -304,7 +303,7 @@ public class Decks {
         GoBack() { this.message = "Go back 3 spaces"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].location -= 3;
         }
     }
@@ -314,7 +313,7 @@ public class Decks {
         GOOJail() { this.message = "Get out of jail free"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].getOutOfJailFree = true;
         }
     }
@@ -324,7 +323,7 @@ public class Decks {
         BankDiv() { this.message = "Bank pays you dividend of £50"; }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].bank += 50;
         }
     }
@@ -342,7 +341,7 @@ public class Decks {
         }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             int playerLoc = mg.players[mg.currentPlayer].location;
             if (playerLoc > destination) {
                 mg.players[mg.currentPlayer].bank += 200;
@@ -361,7 +360,7 @@ public class Decks {
         }
 
         @Override
-        public void transform(MonopolyGame mg) {
+        public void transform(CoreMonopolyGame mg) {
             mg.players[mg.currentPlayer].bank += amount;
         }
     }

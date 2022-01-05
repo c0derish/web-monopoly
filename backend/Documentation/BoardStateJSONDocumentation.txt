@@ -1,5 +1,9 @@
 {
     dice: <dice roll if just rolled>
+    event_card: {
+        type: "chance"/"community_chest",
+        message: <card message string>
+    }
     cells: [
         {
             occupants: [ 'red', 'blue' ]

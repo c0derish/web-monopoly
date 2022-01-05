@@ -5,7 +5,7 @@
         {
             name: <property name>,
             houses: <number of houses>,
-            morgaged: True/False
+            mortgaged: True/False
         }
     ]
 
